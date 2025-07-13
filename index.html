@@ -84,13 +84,11 @@
 <footer>©かろearthガチャ</footer>
 
 <script>
-// ========================
-// 初期データ
-// ========================
+// ====== 初期データ ======
 const items = [
   { id: "item001", name: "いか", rarity: "N" },
   { id: "item002", name: "神聖ローマ帝国", rarity: "N" },
-  { id: "item100", name: "りく", rarity: "N" },
+  { id: "item100", name: "りく", rarity: "R" },
   { id: "item101", name: "code", rarity: "N" },
   { id: "item102", name: "ssk", rarity: "N" },
   { id: "item003", name: "ドイツ帝国", rarity: "R" },
@@ -120,20 +118,75 @@ const rarityRates = {
   R: 8, "R+": 10, "R++": 8, N: 50.2
 };
 
-// ========================
-// 保存データ読み込み
-// ========================
+// ====== データ読み込み（localStorage） ======
 const ownedItems = JSON.parse(localStorage.getItem("ownedItems") || "{}");
 const history = JSON.parse(localStorage.getItem("history") || "[]");
 
+// ====== DOM ======
 const drawBtn = document.getElementById("drawBtn");
 const resultArea = document.getElementById("resultArea");
 const itemsList = document.getElementById("itemsList");
 const historyList = document.getElementById("historyList");
 
-// ========================
-// 関数
-// ========================
+// ====== 所持アイテム表示（レア度順） ======
+function updateOwnedList() {
+  itemsList.innerHTML = "";
+  if (Object.keys(ownedItems).length === 0) {
+    itemsList.innerHTML = "<i>まだ何も持っていません。</i>";
+    return;
+  }
+
+  const rarityOrder = ["GR", "ER", "LR", "MR", "UR", "SSR", "SSR+", "SR", "SR+", "R", "R+", "R++", "N"];
+
+  const sorted = Object.entries(ownedItems).sort((a, b) => {
+    const itemA = items.find(i => i.id === a[0]);
+    const itemB = items.find(i => i.id === b[0]);
+    const rA = rarityOrder.indexOf(itemA.rarity);
+    const rB = rarityOrder.indexOf(itemB.rarity);
+    if (rA !== rB) return rA - rB;
+    return itemA.name.localeCompare(itemB.name);
+  });
+
+  for (const [id, count] of sorted) {
+    const item = items.find(i => i.id === id);
+    const card = document.createElement("div");
+    card.className = "itemCard";
+    card.style.border = `2px solid ${rarityColors[item.rarity]}`;
+    card.innerHTML = `
+      <span class="itemName" style="color:${rarityColors[item.rarity]}">${item.name}</span>
+      <span class="itemCount">×${count}</span>
+    `;
+    itemsList.appendChild(card);
+  }
+}
+
+// ====== ガチャ履歴表示 ======
+function updateHistory() {
+  historyList.innerHTML = "";
+  if (history.length === 0) {
+    historyList.innerHTML = "<i>まだ履歴がありません。</i>";
+    return;
+  }
+  history.slice().reverse().forEach(entry => {
+    const div = document.createElement("div");
+    div.className = "historyEntry";
+    div.textContent = `${entry.date} - ${entry.name}`;
+    historyList.appendChild(div);
+  });
+}
+
+// ====== 結果演出 ======
+function animateResult(text, color) {
+  resultArea.style.color = color;
+  resultArea.textContent = "";
+  let i = 0;
+  const interval = setInterval(() => {
+    resultArea.textContent += text[i++];
+    if (i >= text.length) clearInterval(interval);
+  }, 60);
+}
+
+// ====== ガチャ処理 ======
 function getRandomRarity() {
   const rand = Math.random() * 100;
   let sum = 0;
@@ -150,52 +203,6 @@ function getRandomItem() {
   return pool.length > 0 ? pool[Math.floor(Math.random() * pool.length)] : items[0];
 }
 
-function updateOwnedList() {
-  itemsList.innerHTML = "";
-  if (Object.keys(ownedItems).length === 0) {
-    itemsList.innerHTML = "<i>まだ何も持っていません。</i>";
-    return;
-  }
-  for (const [id, count] of Object.entries(ownedItems)) {
-    const item = items.find(i => i.id === id);
-    const card = document.createElement("div");
-    card.className = "itemCard";
-    card.style.border = `2px solid ${rarityColors[item.rarity]}`;
-    card.innerHTML = `
-      <span class="itemName" style="color:${rarityColors[item.rarity]}">${item.name}</span>
-      <span class="itemCount">×${count}</span>
-    `;
-    itemsList.appendChild(card);
-  }
-}
-
-function updateHistory() {
-  historyList.innerHTML = "";
-  if (history.length === 0) {
-    historyList.innerHTML = "<i>まだ履歴がありません。</i>";
-    return;
-  }
-  history.slice().reverse().forEach(entry => {
-    const div = document.createElement("div");
-    div.className = "historyEntry";
-    div.textContent = `${entry.date} - ${entry.name}`;
-    historyList.appendChild(div);
-  });
-}
-
-function animateResult(text, color) {
-  resultArea.style.color = color;
-  resultArea.textContent = "";
-  let i = 0;
-  const interval = setInterval(() => {
-    resultArea.textContent += text[i++];
-    if (i >= text.length) clearInterval(interval);
-  }, 60);
-}
-
-// ========================
-// ガチャボタン処理
-// ========================
 drawBtn.addEventListener("click", () => {
   drawBtn.disabled = true;
   const item = getRandomItem();
@@ -204,7 +211,7 @@ drawBtn.addEventListener("click", () => {
   const dateStr = now.toLocaleString("ja-JP", { hour12: false });
   history.push({ name: item.name, date: dateStr });
 
-  // 🧠 自動セーブ
+  // セーブ
   localStorage.setItem("ownedItems", JSON.stringify(ownedItems));
   localStorage.setItem("history", JSON.stringify(history));
 
@@ -215,9 +222,7 @@ drawBtn.addEventListener("click", () => {
   setTimeout(() => drawBtn.disabled = false, 1500);
 });
 
-// ========================
 // 初期表示
-// ========================
 updateOwnedList();
 updateHistory();
 </script>
