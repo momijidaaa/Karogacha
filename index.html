@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>かろearthガチャ</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
-  body {
-    margin: 0; background: #f5f7fa; font-family: 'Kosugi Maru', sans-serif; color: #333;
-    display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-  }
-  header {
-    background: #4a90e2; color: white; width: 100%; padding: 1.2em 0; text-align: center;
-    font-size: 1.8em; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  }
-  main {
-    max-width: 480px; width: 90%; margin: 1em auto; background: white; border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 1.5em;
-  }
-  button#drawBtn {
-    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-    border: none; border-radius: 8px; font-size: 1.4em; font-weight: 700; padding: 12px 0;
-    width: 100%; color: #5b1a18; cursor: pointer; box-shadow: 0 5px 15px rgba(255,154,158,0.5);
-    transition: transform 0.2s ease;
-  }
-  button#drawBtn:active {
-    transform: scale(0.95);
-  }
-  #resultArea {
-    margin-top: 1.2em; font-size: 1.6em; font-weight: 700; text-align: center;
-    min-height: 48px; color: #de4c4a;
-    user-select: none;
-  }
-  #itemsList, #historyList {
-    margin-top: 1em; max-height: 180px; overflow-y: auto; border-top: 1px solid #eee; padding-top: 1em;
-  }
-  .sectionTitle {
-    font-weight: 700; margin-bottom: 0.5em; font-size: 1.2em; color: #444;
-  }
-  .itemCard {
-    display: flex; justify-content: space-between; align-items: center;
-    background: #fff3f3; border-radius: 8px; padding: 8px 12px; margin-bottom: 8px;
-    box-shadow: 0 2px 6px rgba(222, 76, 74, 0.3);
-  }
-  .itemName {
-    font-weight: 700; 
-  }
-  .itemCount {
-    background: #b23a38; color: white; border-radius: 9999px; padding: 0 12px; font-weight: 700;
-  }
-  .historyEntry {
-    font-size: 0.9em; padding: 6px 8px; border-bottom: 1px solid #eee;
-    color: #666;
-  }
-  .historyEntry:last-child {
-    border-bottom: none;
-  }
-  footer {
-    margin-top: auto; padding: 1em 0; font-size: 0.9em; color: #999;
-    user-select: none;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>かろearthガチャ</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+    body {
+      margin: 0; background: #f5f7fa; font-family: 'Kosugi Maru', sans-serif; color: #333;
+      display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+    }
+    header {
+      background: #4a90e2; color: white; width: 100%; padding: 1.2em 0; text-align: center;
+      font-size: 1.8em; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    main {
+      max-width: 480px; width: 90%; margin: 1em auto; background: white; border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 1.5em;
+    }
+    button#drawBtn {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      border: none; border-radius: 8px; font-size: 1.4em; font-weight: 700; padding: 12px 0;
+      width: 100%; color: #5b1a18; cursor: pointer; box-shadow: 0 5px 15px rgba(255,154,158,0.5);
+      transition: transform 0.2s ease;
+    }
+    button#drawBtn:active {
+      transform: scale(0.95);
+    }
+    #resultArea {
+      margin-top: 1.2em; font-size: 1.6em; font-weight: 700; text-align: center;
+      min-height: 48px; color: #de4c4a;
+      user-select: none;
+    }
+    #itemsList, #historyList {
+      margin-top: 1em; max-height: 180px; overflow-y: auto; border-top: 1px solid #eee; padding-top: 1em;
+    }
+    .sectionTitle {
+      font-weight: 700; margin-bottom: 0.5em; font-size: 1.2em; color: #444;
+    }
+    .itemCard {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #fff3f3; border-radius: 8px; padding: 8px 12px; margin-bottom: 8px;
+      box-shadow: 0 2px 6px rgba(222, 76, 74, 0.3);
+    }
+    .itemName {
+      font-weight: 700; 
+    }
+    .itemCount {
+      background: #b23a38; color: white; border-radius: 9999px; padding: 0 12px; font-weight: 700;
+    }
+    .historyEntry {
+      font-size: 0.9em; padding: 6px 8px; border-bottom: 1px solid #eee;
+      color: #666;
+    }
+    .historyEntry:last-child {
+      border-bottom: none;
+    }
+    footer {
+      margin-top: auto; padding: 1em 0; font-size: 0.9em; color: #999;
+      user-select: none; text-align: center;
+    }
+  </style>
 </head>
 <body>
 
@@ -84,7 +84,6 @@
 <footer>©かろearthガチャ</footer>
 
 <script>
-// ====== 初期データ ======
 const items = [
   { id: "item001", name: "いか", rarity: "N" },
   { id: "item002", name: "神聖ローマ帝国", rarity: "N" },
@@ -99,9 +98,9 @@ const items = [
   { id: "item004", name: "めだか", rarity: "SR" },
   { id: "item106", name: "もみじ", rarity: "SR+" },
   { id: "item005", name: "ららぁ", rarity: "SSR" },
-{ id: "item008", name: "nrldr", rarity: "SSR" },
+  { id: "item008", name: "nrldr", rarity: "SSR" },
   { id: "item107", name: "親子丼", rarity: "SSR+" },
-{ id: "item009", name: "まーくん", rarity: "SSR+" },
+  { id: "item009", name: "まーくん", rarity: "SSR+" },
   { id: "item006", name: "大日本帝国", rarity: "UR" },
   { id: "item028", name: "雷", rarity: "MR" },
   { id: "item030", name: "こはく♡とくめい", rarity: "LR" },
@@ -121,26 +120,21 @@ const rarityRates = {
   R: 8, "R+": 10, "R++": 8, N: 50.2
 };
 
-// ====== データ読み込み（localStorage） ======
 const ownedItems = JSON.parse(localStorage.getItem("ownedItems") || "{}");
 const history = JSON.parse(localStorage.getItem("history") || "[]");
 
-// ====== DOM ======
 const drawBtn = document.getElementById("drawBtn");
 const resultArea = document.getElementById("resultArea");
 const itemsList = document.getElementById("itemsList");
 const historyList = document.getElementById("historyList");
 
-// ====== 所持アイテム表示（レア度順） ======
 function updateOwnedList() {
   itemsList.innerHTML = "";
   if (Object.keys(ownedItems).length === 0) {
     itemsList.innerHTML = "<i>まだ何も持っていません。</i>";
     return;
   }
-
   const rarityOrder = ["GR", "ER", "LR", "MR", "UR", "SSR", "SSR+", "SR", "SR+", "R", "R+", "R++", "N"];
-
   const sorted = Object.entries(ownedItems).sort((a, b) => {
     const itemA = items.find(i => i.id === a[0]);
     const itemB = items.find(i => i.id === b[0]);
@@ -149,7 +143,6 @@ function updateOwnedList() {
     if (rA !== rB) return rA - rB;
     return itemA.name.localeCompare(itemB.name);
   });
-
   for (const [id, count] of sorted) {
     const item = items.find(i => i.id === id);
     const card = document.createElement("div");
@@ -163,7 +156,6 @@ function updateOwnedList() {
   }
 }
 
-// ====== ガチャ履歴表示 ======
 function updateHistory() {
   historyList.innerHTML = "";
   if (history.length === 0) {
@@ -178,7 +170,6 @@ function updateHistory() {
   });
 }
 
-// ====== 結果演出 ======
 function animateResult(text, color) {
   resultArea.style.color = color;
   resultArea.textContent = "";
@@ -189,7 +180,6 @@ function animateResult(text, color) {
   }, 60);
 }
 
-// ====== ガチャ処理 ======
 function getRandomRarity() {
   const rand = Math.random() * 100;
   let sum = 0;
@@ -213,21 +203,35 @@ drawBtn.addEventListener("click", () => {
   const now = new Date();
   const dateStr = now.toLocaleString("ja-JP", { hour12: false });
   history.push({ name: item.name, date: dateStr });
-
-  // セーブ
   localStorage.setItem("ownedItems", JSON.stringify(ownedItems));
   localStorage.setItem("history", JSON.stringify(history));
-
   animateResult(`🌏 ${item.name} をゲット！`, rarityColors[item.rarity]);
   updateOwnedList();
   updateHistory();
-
   setTimeout(() => drawBtn.disabled = false, 1500);
 });
 
-// 初期表示
 updateOwnedList();
 updateHistory();
+
+// ===== GitHubコミットメッセージ取得 =====
+const repoOwner = "momijidaaa"; // GitHubユーザー名
+const repoName = "Karogacha";      // リポジトリ名
+
+fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/commits`)
+  .then(response => response.json())
+  .then(data => {
+    const latest = data[0];
+    const message = latest.commit.message;
+    const date = new Date(latest.commit.committer.date).toLocaleString("ja-JP", { hour12: false });
+    const link = `https://github.com/${repoOwner}/${repoName}/commit/${latest.sha}`;
+    const p = document.createElement("p");
+    p.style.fontSize = "0.8em";
+    p.style.color = "#666";
+    p.innerHTML = `📦 <b>${date}</b><br>📝 <code>${message}</code><br><a href="${link}" target="_blank">🔗 GitHubで見る</a>`;
+    document.querySelector("footer").appendChild(p);
+  })
+  .catch(err => console.error("コミット取得失敗:", err));
 </script>
 
 </body>
