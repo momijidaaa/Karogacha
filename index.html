@@ -84,88 +84,56 @@
 <footer>©かろearthガチャ</footer>
 
 <script>
+// ========================
+// 初期データ
+// ========================
 const items = [
-  // ノーマル
   { id: "item001", name: "いか", rarity: "N" },
   { id: "item002", name: "神聖ローマ帝国", rarity: "N" },
   { id: "item100", name: "りく", rarity: "N" },
   { id: "item101", name: "code", rarity: "N" },
   { id: "item102", name: "ssk", rarity: "N" },
-
-  // R系
   { id: "item003", name: "ドイツ帝国", rarity: "R" },
   { id: "item103", name: "プロイセン王国", rarity: "R" },
   { id: "item104", name: "アイスランド", rarity: "R+" },
   { id: "item105", name: "こあです", rarity: "R++" },
-
-  // SR系
   { id: "item004", name: "めだか", rarity: "SR" },
   { id: "item106", name: "もみじ", rarity: "SR+" },
-
-  // SSR系
   { id: "item005", name: "ららぁ", rarity: "SSR" },
   { id: "item107", name: "親子丼", rarity: "SSR+" },
-
-  // UR系
   { id: "item006", name: "大日本帝国", rarity: "UR" },
-
-  // MR系
   { id: "item028", name: "雷", rarity: "MR" },
-
-  // LR系
   { id: "item030", name: "こはとく", rarity: "LR" },
-
-  // ER系
   { id: "item060", name: "しろこ", rarity: "ER" },
-
-  // GR系
   { id: "item200", name: "かろん", rarity: "GR" }
 ];
 
-// レアリティカラー設定
 const rarityColors = {
-  GR: "#ffd700",    // ゴールド
-  ER: "#ffa500",    // オレンジ
-  LR: "#ff8000",    // ダークオレンジ
-  MR: "#b366ff",    // パープル
-  UR: "#db2777",    // ピンク
-  SSR: "#ef4444",   // 赤
-  "SSR+": "#f87171",// ライトレッド
-  SR: "#facc15",    // 黄
-  "SR+": "#fcd34d", // ライトイエロー
-  R: "#3b82f6",     // 青
-  "R+": "#60a5fa",  // ライトブルー
-  "R++": "#93c5fd", // 薄青
-  N: "#a0a0a0"      // グレー
+  GR: "#ffd700", ER: "#ffa500", LR: "#ff8000", MR: "#b366ff", UR: "#db2777",
+  SSR: "#ef4444", "SSR+": "#f87171", SR: "#facc15", "SR+": "#fcd34d",
+  R: "#3b82f6", "R+": "#60a5fa", "R++": "#93c5fd", N: "#a0a0a0"
 };
 
-// 所持アイテム（id: count）
-const ownedItems = {};
-// ガチャ履歴（[{name, date}]）
-const history = [];
+const rarityRates = {
+  GR: 0.05, ER: 0.1, LR: 0.15, MR: 0.2, UR: 0.3,
+  SSR: 1, "SSR+": 1.5, SR: 3, "SR+": 3,
+  R: 8, "R+": 10, "R++": 8, N: 50.2
+};
+
+// ========================
+// 保存データ読み込み
+// ========================
+const ownedItems = JSON.parse(localStorage.getItem("ownedItems") || "{}");
+const history = JSON.parse(localStorage.getItem("history") || "[]");
 
 const drawBtn = document.getElementById("drawBtn");
 const resultArea = document.getElementById("resultArea");
 const itemsList = document.getElementById("itemsList");
 const historyList = document.getElementById("historyList");
 
-// レアリティ確率（合計100%）
-const rarityRates = {
-  GR: 0.05,
-  ER: 0.1,
-  LR: 0.15,
-  MR: 0.2,
-  UR: 0.3,
-  SSR: 1,
-  "SSR+": 1.5,
-  SR: 3,
-  "SR+": 3,
-  R: 8,
-  "R+": 10,
-  "R++": 8,
-  N: 50.2,
-};
-
+// ========================
+// 関数
+// ========================
 function getRandomRarity() {
   const rand = Math.random() * 100;
   let sum = 0;
@@ -173,33 +141,26 @@ function getRandomRarity() {
     sum += rate;
     if (rand < sum) return rarity;
   }
-  // 万が一合わなければN返す
   return "N";
 }
 
 function getRandomItem() {
   const rarity = getRandomRarity();
-  const candidates = items.filter((item) => item.rarity === rarity);
-  if (candidates.length > 0) {
-    const idx = Math.floor(Math.random() * candidates.length);
-    return candidates[idx];
-  }
-  // なければノーマルの先頭返す
-  return items.find((i) => i.rarity === "N");
+  const pool = items.filter(i => i.rarity === rarity);
+  return pool.length > 0 ? pool[Math.floor(Math.random() * pool.length)] : items[0];
 }
 
 function updateOwnedList() {
+  itemsList.innerHTML = "";
   if (Object.keys(ownedItems).length === 0) {
     itemsList.innerHTML = "<i>まだ何も持っていません。</i>";
     return;
   }
-  itemsList.innerHTML = "";
   for (const [id, count] of Object.entries(ownedItems)) {
-    const item = items.find((i) => i.id === id);
+    const item = items.find(i => i.id === id);
     const card = document.createElement("div");
     card.className = "itemCard";
     card.style.border = `2px solid ${rarityColors[item.rarity]}`;
-    card.querySelector?.("span.itemName"); // 防御的に
     card.innerHTML = `
       <span class="itemName" style="color:${rarityColors[item.rarity]}">${item.name}</span>
       <span class="itemCount">×${count}</span>
@@ -209,36 +170,32 @@ function updateOwnedList() {
 }
 
 function updateHistory() {
+  historyList.innerHTML = "";
   if (history.length === 0) {
     historyList.innerHTML = "<i>まだ履歴がありません。</i>";
     return;
   }
-  historyList.innerHTML = "";
-  history
-    .slice()
-    .reverse()
-    .forEach((entry) => {
-      const div = document.createElement("div");
-      div.className = "historyEntry";
-      div.textContent = `${entry.date} - ${entry.name}`;
-      historyList.appendChild(div);
-    });
+  history.slice().reverse().forEach(entry => {
+    const div = document.createElement("div");
+    div.className = "historyEntry";
+    div.textContent = `${entry.date} - ${entry.name}`;
+    historyList.appendChild(div);
+  });
 }
 
 function animateResult(text, color) {
   resultArea.style.color = color;
   resultArea.textContent = "";
-  let index = 0;
+  let i = 0;
   const interval = setInterval(() => {
-    if (index < text.length) {
-      resultArea.textContent += text[index];
-      index++;
-    } else {
-      clearInterval(interval);
-    }
+    resultArea.textContent += text[i++];
+    if (i >= text.length) clearInterval(interval);
   }, 60);
 }
 
+// ========================
+// ガチャボタン処理
+// ========================
 drawBtn.addEventListener("click", () => {
   drawBtn.disabled = true;
   const item = getRandomItem();
@@ -246,18 +203,23 @@ drawBtn.addEventListener("click", () => {
   const now = new Date();
   const dateStr = now.toLocaleString("ja-JP", { hour12: false });
   history.push({ name: item.name, date: dateStr });
+
+  // 🧠 自動セーブ
+  localStorage.setItem("ownedItems", JSON.stringify(ownedItems));
+  localStorage.setItem("history", JSON.stringify(history));
+
   animateResult(`🎉 ${item.name} をゲット！`, rarityColors[item.rarity]);
   updateOwnedList();
   updateHistory();
-  setTimeout(() => {
-    drawBtn.disabled = false;
-  }, 1500);
+
+  setTimeout(() => drawBtn.disabled = false, 1500);
 });
 
+// ========================
 // 初期表示
+// ========================
 updateOwnedList();
 updateHistory();
-
 </script>
 
 </body>
