@@ -104,12 +104,11 @@ const items = [
   { id: "item017", name: "まーくん", rarity: "SSR+" },
   { id: "item018", name: "大日本帝国", rarity: "UR" },
   { id: "item019", name: "雷", rarity: "MR" },
- { id: "item024", name: "こはく帝国", rarity: "MR" },
+  { id: "item024", name: "こはく帝国", rarity: "MR" },
   { id: "item020", name: "こはく♡とくめい", rarity: "LR" },
   { id: "item021", name: "しろこ", rarity: "ER" },
   { id: "item022", name: "かろん", rarity: "GR" },
- { id: "item023", name: "匿名①②⑨", rarity: "SR+" },
-{ id: "item024", name: "こはく帝国", rarity: "MR" }
+  { id: "item023", name: "匿名①②⑨", rarity: "SR+" }
 ];
 
 const rarityColors = {
@@ -118,10 +117,11 @@ const rarityColors = {
   R: "#3b82f6", "R+": "#60a5fa", "R++": "#93c5fd", N: "#a0a0a0"
 };
 
+// ✅ 修正済み：R+ を除去、合計100%に調整
 const rarityRates = {
   GR: 0.05, ER: 0.1, LR: 0.15, MR: 0.2, UR: 0.3,
   SSR: 1, "SSR+": 1.5, SR: 3, "SR+": 3,
-  R: 8, "R+": 10, "R++": 8, N: 64.2 // ←合計100になるよう調整
+  R: 8, "R++": 8, N: 64.2
 };
 
 const ownedItems = JSON.parse(localStorage.getItem("ownedItems") || "{}");
@@ -138,7 +138,7 @@ function updateOwnedList() {
     itemsList.innerHTML = "<i>まだ何も持っていません。</i>";
     return;
   }
-  const rarityOrder = ["GR", "ER", "LR", "MR", "UR", "SSR", "SSR+", "SR", "SR+", "R", "R+", "R++", "N"];
+  const rarityOrder = ["GR", "ER", "LR", "MR", "UR", "SSR", "SSR+", "SR", "SR+", "R", "R++", "N"];
   const sorted = Object.entries(ownedItems).sort((a, b) => {
     const itemA = items.find(i => i.id === a[0]);
     const itemB = items.find(i => i.id === b[0]);
@@ -184,6 +184,7 @@ function animateResult(text, color) {
   }, 60);
 }
 
+// ✅ 修正済み：常に何かしら返すように
 function getRandomRarity() {
   const rand = Math.random() * 100;
   let sum = 0;
@@ -217,25 +218,6 @@ drawBtn.addEventListener("click", () => {
 
 updateOwnedList();
 updateHistory();
-
-// ===== GitHubコミットメッセージ取得 =====
-const repoOwner = "momijidaaa"; // GitHubユーザー名
-const repoName = "Karogacha";      // リポジトリ名
-
-fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/commits`)
-  .then(response => response.json())
-  .then(data => {
-    const latest = data[0];
-    const message = latest.commit.message;
-    const date = new Date(latest.commit.committer.date).toLocaleString("ja-JP", { hour12: false });
-    const link = `https://github.com/${repoOwner}/${repoName}/commit/${latest.sha}`;
-    const p = document.createElement("p");
-    p.style.fontSize = "0.8em";
-    p.style.color = "#666";
-    p.innerHTML = `📦 <b>${date}</b><br>📝 <code>${message}</code><br><a href="${link}" target="_blank">🔗 GitHubで見る</a>`;
-    document.querySelector("footer").appendChild(p);
-  })
-  .catch(err => console.error("コミット取得失敗:", err));
 </script>
 
 </body>
