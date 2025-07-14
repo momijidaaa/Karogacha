@@ -88,6 +88,20 @@
       border-radius: 8px;
       background: #fff;
     }
+
+    /* ここからアニメーション */
+    @keyframes swing {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(5deg); }
+      50% { transform: rotate(0deg); }
+      75% { transform: rotate(-5deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .animate-swing {
+      display: inline-block;
+      animation: swing 1s ease-in-out;
+    }
   </style>
 </head>
 <body>
@@ -215,6 +229,7 @@ drawBtn.addEventListener("click", () => {
 
   resultArea.style.color = "#333";
   resultArea.textContent = "🎰 ガチャ中…";
+  resultArea.classList.remove("animate-swing");
 
   setTimeout(() => {
     const item = getRandomItem();
@@ -225,6 +240,12 @@ drawBtn.addEventListener("click", () => {
     localStorage.setItem("gacha_history", JSON.stringify(history));
     resultArea.style.color = rarityColors[item.rarity];
     resultArea.textContent = `🎉 ${item.name} をゲット！`;
+
+    // アニメーションリセットして付与
+    resultArea.classList.remove("animate-swing");
+    void resultArea.offsetWidth; // 再描画トリガー
+    resultArea.classList.add("animate-swing");
+
     updateOwnedList();
     updateHistory();
     drawBtn.disabled = false;
