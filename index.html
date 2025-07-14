@@ -59,6 +59,7 @@
   footer {
     margin-top: auto; padding: 1em 0; font-size: 0.9em; color: #999;
     user-select: none;
+    text-align: center;
   }
 </style>
 </head>
@@ -81,7 +82,10 @@
   </section>
 </main>
 
-<footer>©かろearthガチャ</footer>
+<footer>
+  <div>©かろearthガチャ</div>
+  <div id="commitTime" style="font-size:0.8em; color:#bbb; margin-top:6px;">コミット日時を取得中…</div>
+</footer>
 
 <script>
 const items = [
@@ -101,7 +105,7 @@ const items = [
   // SR系
   { id: "item004", name: "めだか", rarity: "SR" },
   { id: "item106", name: "もみじ", rarity: "SR+" },
-{ id: "item16", name: "なげ", rarity: "SR+" },
+  { id: "item16", name: "なげ", rarity: "SR+" },
 
   // SSR系
   { id: "item005", name: "ららぁ", rarity: "SSR" },
@@ -120,7 +124,7 @@ const items = [
 
   // ER系
   { id: "item060", name: "しろこ", rarity: "ER" },
-{ id: "item1900", name: "GhostHax", rarity: "ER" },
+  { id: "item1900", name: "GhostHax", rarity: "ER" },
 
   // GR系
   { id: "item200", name: "かろん", rarity: "GR" }
@@ -153,7 +157,7 @@ const resultArea = document.getElementById("resultArea");
 const itemsList = document.getElementById("itemsList");
 const historyList = document.getElementById("historyList");
 
-// レアリティ確率（合計100%）
+// レアリティ確率（合計は気にしなくてOK）
 const rarityRates = {
   GR: 0.05,
   ER: 0.1,
@@ -177,7 +181,6 @@ function getRandomRarity() {
     sum += rate;
     if (rand < sum) return rarity;
   }
-  // 万が一合わなければN返す
   return "N";
 }
 
@@ -188,30 +191,48 @@ function getRandomItem() {
     const idx = Math.floor(Math.random() * candidates.length);
     return candidates[idx];
   }
-  // なければノーマルの先頭返す
   return items.find((i) => i.rarity === "N");
 }
 
+// レアリティ順序（高い順）
+const rarityOrder = [
+  "GR", "ER", "LR", "MR", "UR",
+  "SSR+", "SSR",
+  "SR+", "SR",
+  "R+", "R++", "R",
+  "N"
+];
+
+// 所持アイテムをレア度順にソートして表示
 function updateOwnedList() {
   if (Object.keys(ownedItems).length === 0) {
     itemsList.innerHTML = "<i>まだ何も持っていません。</i>";
     return;
   }
   itemsList.innerHTML = "";
-  for (const [id, count] of Object.entries(ownedItems)) {
-    const item = items.find((i) => i.id === id);
+
+  const ownedArray = Object.entries(ownedItems).map(([id, count]) => {
+    const item = items.find(i => i.id === id);
+    return { ...item, count };
+  });
+
+  ownedArray.sort((a, b) => {
+    return rarityOrder.indexOf(a.rarity) - rarityOrder.indexOf(b.rarity);
+  });
+
+  for (const item of ownedArray) {
     const card = document.createElement("div");
     card.className = "itemCard";
     card.style.border = `2px solid ${rarityColors[item.rarity]}`;
-    card.querySelector?.("span.itemName"); // 防御的に
     card.innerHTML = `
       <span class="itemName" style="color:${rarityColors[item.rarity]}">${item.name}</span>
-      <span class="itemCount">×${count}</span>
+      <span class="itemCount">×${item.count}</span>
     `;
     itemsList.appendChild(card);
   }
 }
 
+// ガチャ履歴表示更新
 function updateHistory() {
   if (history.length === 0) {
     historyList.innerHTML = "<i>まだ履歴がありません。</i>";
@@ -229,6 +250,7 @@ function updateHistory() {
     });
 }
 
+// 結果表示アニメーション
 function animateResult(text, color) {
   resultArea.style.color = color;
   resultArea.textContent = "";
@@ -258,7 +280,31 @@ drawBtn.addEventListener("click", () => {
   }, 1500);
 });
 
-// 初期表示
+// GitHubリポジトリ情報
+const githubUser = 'momijidaaa';
+const githubRepo = 'Karogacha';
+
+// GitHub最新コミット日時取得表示
+async function fetchLatestCommitTime() {
+  const url = `https://api.github.com/repos/${githubUser}/${githubRepo}/commits?per_page=1`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('GitHub APIエラー');
+    const commits = await res.json();
+    if (commits.length === 0) throw new Error('コミットなし');
+    const dateStr = commits[0].commit.committer.date;
+    const date = new Date(dateStr);
+    const formatted = date.toLocaleString('ja-JP', { hour12: false });
+    document.getElementById('commitTime').textContent = `最新コミット: ${formatted}`;
+  } catch (e) {
+    document.getElementById('commitTime').textContent = '最新コミット日時の取得に失敗しました';
+    console.error(e);
+  }
+}
+
+fetchLatestCommitTime();
+
+// 初期表示更新
 updateOwnedList();
 updateHistory();
 
