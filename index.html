@@ -1,61 +1,116 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>かろearthガチャ</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
-    body {
-      margin: 0; background: #f5f7fa; font-family: 'Kosugi Maru', sans-serif; color: #333;
-      display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-    }
-    header {
-      background: #4a90e2; color: white; width: 100%; padding: 1.2em 0; text-align: center;
-      font-size: 1.8em; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    main {
-      max-width: 480px; width: 90%; margin: 1em auto; background: white; border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 1.5em;
-    }
-    button#drawBtn {
-      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-      border: none; border-radius: 8px; font-size: 1.4em; font-weight: 700; padding: 12px 0;
-      width: 100%; color: #5b1a18; cursor: pointer; box-shadow: 0 5px 15px rgba(255,154,158,0.5);
-      transition: transform 0.2s ease;
-    }
-    button#drawBtn:active {
-      transform: scale(0.95);
-    }
-    #resultArea {
-      margin-top: 1.2em; font-size: 1.6em; font-weight: 700; text-align: center;
-      min-height: 48px; color: #de4c4a;
-      user-select: none;
-    }
-    #itemsList, #historyList {
-      margin-top: 1em; max-height: 180px; overflow-y: auto; border-top: 1px solid #eee; padding-top: 1em;
-    }
-    .sectionTitle {
-      font-weight: 700; margin-bottom: 0.5em; font-size: 1.2em; color: #444;
-    }
-    .itemCard {
-      display: flex; justify-content: space-between; align-items: center;
-      background: #fff3f3; border-radius: 8px; padding: 8px 12px; margin-bottom: 8px;
-      box-shadow: 0 2px 6px rgba(222, 76, 74, 0.3);
-    }
-    .itemName { font-weight: 700; }
-    .itemCount {
-      background: #b23a38; color: white; border-radius: 9999px; padding: 0 12px; font-weight: 700;
-    }
-    .historyEntry {
-      font-size: 0.9em; padding: 6px 8px; border-bottom: 1px solid #eee; color: #666;
-    }
-    .historyEntry:last-child { border-bottom: none; }
-    footer {
-      margin-top: auto; padding: 1em 0; font-size: 0.9em; color: #999;
-      user-select: none; text-align: center;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>かろearthガチャ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+  body {
+    margin: 0;
+    background: #f5f7fa;
+    font-family: 'Kosugi Maru', 'Noto Sans JP', 'Meiryo', sans-serif;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  header {
+    background: #4a90e2;
+    color: white;
+    width: 100%;
+    padding: 1.2em 0;
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  main {
+    max-width: 480px;
+    width: 90%;
+    margin: 1em auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 1.5em;
+  }
+  button#drawBtn {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    border: none;
+    border-radius: 8px;
+    font-size: 1.4em;
+    font-weight: 700;
+    padding: 12px 0;
+    width: 100%;
+    color: #5b1a18;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255,154,158,0.5);
+    transition: transform 0.2s ease;
+  }
+  button#drawBtn:active {
+    transform: scale(0.95);
+  }
+  #resultArea {
+    margin-top: 1.2em;
+    font-size: 1.6em;
+    font-weight: 700;
+    text-align: center;
+    min-height: 48px;
+    color: #de4c4a;
+    user-select: none;
+  }
+  #itemsList, #historyList {
+    margin-top: 1em;
+    max-height: 180px;
+    overflow-y: auto;
+    border-top: 1px solid #eee;
+    padding-top: 1em;
+  }
+  .sectionTitle {
+    font-weight: 700;
+    margin-bottom: 0.5em;
+    font-size: 1.2em;
+    color: #444;
+  }
+  .itemCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff3f3;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 6px rgba(222, 76, 74, 0.3);
+  }
+  .itemName {
+    font-weight: 700;
+  }
+  .itemCount {
+    background: #b23a38;
+    color: white;
+    border-radius: 9999px;
+    padding: 0 12px;
+    font-weight: 700;
+  }
+  .historyEntry {
+    font-size: 0.9em;
+    padding: 6px 8px;
+    border-bottom: 1px solid #eee;
+    color: #666;
+  }
+  .historyEntry:last-child {
+    border-bottom: none;
+  }
+  footer {
+    margin-top: auto;
+    padding: 1em 0;
+    font-size: 0.9em;
+    color: #999;
+    user-select: none;
+    text-align: center;
+  }
+</style>
 </head>
 <body>
 
@@ -80,19 +135,19 @@
   <div>©かろearthガチャ</div>
   <div id="commitTime" style="font-size:0.8em; color:#bbb; margin-top:6px;">コミット日時を取得中…</div>
   <div style="font-size:0.8em; margin-top:6px;">
-    <a href="https://github.com/momijidaaa/Karogacha" target="_blank" rel="noopener noreferrer" style="color:#999; text-decoration:none; margin-right:12px;">GitHub リポジトリ</a>
-    <a href="https://github.com/momijidaaa/Karogacha/issues" target="_blank" rel="noopener noreferrer" style="color:#999; text-decoration:none;">Issues</a>
+    <a href="https://github.com/momijidaaa/Karogacha" target="_blank" style="color:#999; text-decoration:none; margin-right:12px;">GitHub リポジトリ</a>
+    <a href="https://github.com/momijidaaa/Karogacha/issues" target="_blank" style="color:#999; text-decoration:none;">Issues</a>
   </div>
 </footer>
 
 <script>
-// ===================
-// アイテム定義
-// ===================
+// ---------- データ ----------
 const items = [
   { id: "item001", name: "いか", rarity: "N" },
   { id: "item002", name: "神聖ローマ帝国", rarity: "N" },
   { id: "item100", name: "りく", rarity: "R" },
+{ id: "itemkoha", name: "こはく", rarity: "R" },
+{ id: "itemtoku", name: "匿名", rarity: "SR" },
   { id: "item101", name: "code", rarity: "N" },
   { id: "item102", name: "ssk", rarity: "N" },
   { id: "item003", name: "ドイツ帝国", rarity: "R" },
@@ -103,13 +158,10 @@ const items = [
   { id: "item106", name: "もみじ", rarity: "SR+" },
   { id: "item16", name: "なげ", rarity: "SR+" },
   { id: "item005", name: "ららぁ", rarity: "SSR" },
-  { id: "ite6", name: "ntldr", rarity: "SSR" },
-{ id: "ite", name: "まじろん", rarity: "SSR" },
-{ id: "06", name: "はるいち", rarity: "SSR" },
+  { id: "item0q5", name: "ntldr", rarity: "SSR" },
   { id: "item107", name: "親子丼", rarity: "SSR+" },
   { id: "item478", name: "まーくん", rarity: "SSR+" },
   { id: "item006", name: "大日本帝国", rarity: "UR" },
-{ id: "itemQW6", name: "AAC", rarity: "UR" },
   { id: "item028", name: "雷", rarity: "MR" },
   { id: "item030", name: "こはく♡とくめい", rarity: "LR" },
   { id: "item060", name: "しろこ", rarity: "ER" },
@@ -118,28 +170,29 @@ const items = [
 ];
 
 const rarityColors = {
-  GR: "#ffd700", ER: "#ffa500", LR: "#ff8000", MR: "#b366ff", UR: "#db2777",
-  SSR: "#ef4444", "SSR+": "#f87171", SR: "#facc15", "SR+": "#fcd34d",
-  R: "#3b82f6", "R+": "#60a5fa", "R++": "#93c5fd", N: "#a0a0a0"
+  GR:"#ffd700", ER:"#ffa500", LR:"#ff8000", MR:"#b366ff", UR:"#db2777",
+  SSR:"#ef4444", "SSR+":"#f87171", SR:"#facc15", "SR+":"#fcd34d",
+  R:"#3b82f6", "R+":"#60a5fa", "R++":"#93c5fd", N:"#a0a0a0"
 };
+
 const rarityRates = {
-  GR: 0.05, ER: 0.1, LR: 0.15, MR: 0.2, UR: 0.3, SSR: 1, "SSR+": 1.5,
-  SR: 3, "SR+": 3, R: 8, "R+": 10, "R++": 8, N: 50.2
+  GR:0.05, ER:0.1, LR:0.15, MR:0.2, UR:0.3, SSR:1, "SSR+":1.5,
+  SR:3, "SR+":3, R:8, "R+":10, "R++":8, N:50.2
 };
+
 const rarityOrder = [
-  "GR", "ER", "LR", "MR", "UR", "SSR+", "SSR", "SR+", "SR", "R+", "R++", "R", "N"
+  "GR","ER","LR","MR","UR","SSR+","SSR",
+  "SR+","SR","R+","R++","R","N"
 ];
 
-// ===================
-// セーブ・ロード
-// ===================
-let ownedItems = JSON.parse(localStorage.getItem("ownedItems") || "{}");
-let history = JSON.parse(localStorage.getItem("history") || "[]");
+// ---------- データ読み込み ----------
+let ownedItems = JSON.parse(localStorage.getItem("gacha_items") || "{}");
+let history = JSON.parse(localStorage.getItem("gacha_history") || "[]");
 
-function save() {
-  localStorage.setItem("ownedItems", JSON.stringify(ownedItems));
-  localStorage.setItem("history", JSON.stringify(history));
-}
+const drawBtn = document.getElementById("drawBtn");
+const resultArea = document.getElementById("resultArea");
+const itemsList = document.getElementById("itemsList");
+const historyList = document.getElementById("historyList");
 
 function getRandomRarity() {
   const rand = Math.random() * 100;
@@ -154,37 +207,36 @@ function getRandomRarity() {
 function getRandomItem() {
   const rarity = getRandomRarity();
   const candidates = items.filter(i => i.rarity === rarity);
-  return candidates[Math.floor(Math.random() * candidates.length)] || items[0];
+  return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
 function updateOwnedList() {
-  const itemsList = document.getElementById("itemsList");
   if (Object.keys(ownedItems).length === 0) {
-    itemsList.innerHTML = "<i>まだ何も持っていません。</i>"; return;
+    itemsList.innerHTML = "<i>まだ何も持っていません。</i>";
+    return;
   }
-  const ownedArray = Object.entries(ownedItems).map(([id, count]) => {
-    const item = items.find(i => i.id === id); return { ...item, count };
-  }).sort((a, b) => rarityOrder.indexOf(a.rarity) - rarityOrder.indexOf(b.rarity));
-
   itemsList.innerHTML = "";
-  for (const item of ownedArray) {
+  const arr = Object.entries(ownedItems).map(([id, count]) => {
+    const item = items.find(i => i.id === id);
+    return { ...item, count };
+  });
+  arr.sort((a, b) => rarityOrder.indexOf(a.rarity) - rarityOrder.indexOf(b.rarity));
+  arr.forEach(item => {
     const div = document.createElement("div");
     div.className = "itemCard";
     div.style.border = `2px solid ${rarityColors[item.rarity]}`;
-    div.innerHTML = `
-      <span class="itemName" style="color:${rarityColors[item.rarity]}">${item.name}</span>
-      <span class="itemCount">×${item.count}</span>`;
+    div.innerHTML = `<span class="itemName" style="color:${rarityColors[item.rarity]}">${item.name}</span><span class="itemCount">×${item.count}</span>`;
     itemsList.appendChild(div);
-  }
+  });
 }
 
 function updateHistory() {
-  const historyList = document.getElementById("historyList");
   if (history.length === 0) {
-    historyList.innerHTML = "<i>まだ履歴がありません。</i>"; return;
+    historyList.innerHTML = "<i>まだ履歴がありません。</i>";
+    return;
   }
   historyList.innerHTML = "";
-  [...history].reverse().forEach(entry => {
+  history.slice().reverse().forEach(entry => {
     const div = document.createElement("div");
     div.className = "historyEntry";
     div.textContent = `${entry.date} - ${entry.name}`;
@@ -193,46 +245,49 @@ function updateHistory() {
 }
 
 function animateResult(text, color) {
-  const resultArea = document.getElementById("resultArea");
   resultArea.style.color = color;
   resultArea.textContent = "";
-  let i = 0;
+  let index = 0;
   const interval = setInterval(() => {
-    if (i < text.length) {
-      resultArea.textContent += text[i++];
+    if (index < text.length) {
+      resultArea.textContent += text[index++];
     } else {
       clearInterval(interval);
     }
   }, 60);
 }
 
-document.getElementById("drawBtn").addEventListener("click", () => {
+drawBtn.addEventListener("click", () => {
+  drawBtn.disabled = true;
   const item = getRandomItem();
   ownedItems[item.id] = (ownedItems[item.id] || 0) + 1;
-  const date = new Date().toLocaleString("ja-JP", { hour12: false });
-  history.push({ name: item.name, date });
-  save();
+  const dateStr = new Date().toLocaleString("ja-JP", { hour12: false });
+  history.push({ name: item.name, date: dateStr });
+
+  // 自動セーブ
+  localStorage.setItem("gacha_items", JSON.stringify(ownedItems));
+  localStorage.setItem("gacha_history", JSON.stringify(history));
+
   animateResult(`🎉 ${item.name} をゲット！`, rarityColors[item.rarity]);
-  updateOwnedList(); updateHistory();
+  updateOwnedList();
+  updateHistory();
+  setTimeout(() => drawBtn.disabled = false, 1500);
 });
 
-// GitHub 最新コミット日時取得
-(async () => {
+// GitHubコミット取得
+async function fetchLatestCommitTime() {
+  const res = await fetch("https://api.github.com/repos/momijidaaa/Karogacha/commits?per_page=1");
   try {
-    const res = await fetch("https://api.github.com/repos/momijidaaa/Karogacha/commits?per_page=1");
-    const json = await res.json();
-    const date = new Date(json[0].commit.committer.date);
-    document.getElementById("commitTime").textContent =
-      "最新コミット: " + date.toLocaleString("ja-JP", { hour12: false });
+    const commits = await res.json();
+    const date = new Date(commits[0].commit.committer.date);
+    document.getElementById("commitTime").textContent = `最新コミット: ${date.toLocaleString("ja-JP", { hour12: false })}`;
   } catch {
     document.getElementById("commitTime").textContent = "最新コミット日時の取得に失敗しました";
   }
-})();
-
-// 初期表示
+}
+fetchLatestCommitTime();
 updateOwnedList();
 updateHistory();
 </script>
-
 </body>
 </html>
