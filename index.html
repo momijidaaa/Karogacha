@@ -50,6 +50,9 @@
       font-size: 1.4em;
       text-align: center;
       color: #de4c4a;
+      /* 文字が横並びでアニメーションしやすいように */
+      display: inline-block;
+      white-space: nowrap;
     }
     .itemCard {
       display: flex;
@@ -89,7 +92,7 @@
       background: #fff;
     }
 
-    /* ここからアニメーション */
+    /* 1文字ずつのゆらゆらアニメーション */
     @keyframes swing {
       0% { transform: rotate(0deg); }
       25% { transform: rotate(5deg); }
@@ -97,10 +100,13 @@
       75% { transform: rotate(-5deg); }
       100% { transform: rotate(0deg); }
     }
-
-    .animate-swing {
+    #resultArea span {
       display: inline-block;
-      animation: swing 1s ease-in-out;
+      animation-name: swing;
+      animation-duration: 1s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
     }
   </style>
 </head>
@@ -221,6 +227,17 @@ function updateHistory() {
   });
 }
 
+function setAnimatedResultText(text, color) {
+  resultArea.innerHTML = ""; // まず空にする
+  resultArea.style.color = color;
+  for (let i = 0; i < text.length; i++) {
+    const span = document.createElement("span");
+    span.textContent = text[i];
+    span.style.animationDelay = `${i * 0.1}s`; // 0.1秒ずつ遅らせる
+    resultArea.appendChild(span);
+  }
+}
+
 drawBtn.addEventListener("click", () => {
   drawBtn.disabled = true;
 
@@ -228,8 +245,7 @@ drawBtn.addEventListener("click", () => {
   audio.play().catch(() => {}); // 自動再生制限対策
 
   resultArea.style.color = "#333";
-  resultArea.textContent = "🎰 ガチャ中…";
-  resultArea.classList.remove("animate-swing");
+  resultArea.textContent = "🌏 ガチャ中…";
 
   setTimeout(() => {
     const item = getRandomItem();
@@ -238,14 +254,7 @@ drawBtn.addEventListener("click", () => {
     history.push({ name: item.name, date: dateStr });
     localStorage.setItem("gacha_items", JSON.stringify(ownedItems));
     localStorage.setItem("gacha_history", JSON.stringify(history));
-    resultArea.style.color = rarityColors[item.rarity];
-    resultArea.textContent = `🎉 ${item.name} をゲット！`;
-
-    // アニメーションリセットして付与
-    resultArea.classList.remove("animate-swing");
-    void resultArea.offsetWidth; // 再描画トリガー
-    resultArea.classList.add("animate-swing");
-
+    setAnimatedResultText(`🌏 ${item.name} をゲット！`, rarityColors[item.rarity]);
     updateOwnedList();
     updateHistory();
     drawBtn.disabled = false;
