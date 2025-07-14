@@ -79,7 +79,7 @@
       color: #999;
       text-align: center;
     }
-    /* 👇 スクロール追加 */
+    /* スクロール対応 */
     #itemsList, #historyList {
       max-height: 300px;
       overflow-y: auto;
@@ -209,17 +209,26 @@ function updateHistory() {
 
 drawBtn.addEventListener("click", () => {
   drawBtn.disabled = true;
-  const item = getRandomItem();
-  ownedItems[item.id] = (ownedItems[item.id] || 0) + 1;
-  const dateStr = new Date().toLocaleString("ja-JP", { hour12: false });
-  history.push({ name: item.name, date: dateStr });
-  localStorage.setItem("gacha_items", JSON.stringify(ownedItems));
-  localStorage.setItem("gacha_history", JSON.stringify(history));
-  resultArea.style.color = rarityColors[item.rarity];
-  resultArea.textContent = `🎉 ${item.name} をゲット！`;
-  updateOwnedList();
-  updateHistory();
-  setTimeout(() => drawBtn.disabled = false, 1000);
+
+  const audio = new Audio("gacha.mp3");
+  audio.play().catch(() => {}); // 自動再生制限対策
+
+  resultArea.style.color = "#333";
+  resultArea.textContent = "🎰 ガチャ中…";
+
+  setTimeout(() => {
+    const item = getRandomItem();
+    ownedItems[item.id] = (ownedItems[item.id] || 0) + 1;
+    const dateStr = new Date().toLocaleString("ja-JP", { hour12: false });
+    history.push({ name: item.name, date: dateStr });
+    localStorage.setItem("gacha_items", JSON.stringify(ownedItems));
+    localStorage.setItem("gacha_history", JSON.stringify(history));
+    resultArea.style.color = rarityColors[item.rarity];
+    resultArea.textContent = `🎉 ${item.name} をゲット！`;
+    updateOwnedList();
+    updateHistory();
+    drawBtn.disabled = false;
+  }, 1000);
 });
 
 document.getElementById("backupBtn").addEventListener("click", () => {
